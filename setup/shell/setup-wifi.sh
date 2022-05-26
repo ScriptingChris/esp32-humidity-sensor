@@ -45,7 +45,7 @@ sudo tee /etc/dnsmasq.conf <<EOF
 interface=wlan1
   dhcp-range=192.168.99.100,192.168.99.199,255.255.255.0,24h
   domain=wlan
-  address=/rt.wlan/10.0.0.1
+  address=/rt.wlan/192.168.99.1
 EOF
 
 
