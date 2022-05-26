@@ -29,11 +29,22 @@ interface wlan1
     nohook wpa_supplicant
 EOF
 
+sudo tee /etc/systcl.d/routed-ap.conf <<EOF
+net.ipv4.ip_forward=1
+EOF
+
+sudo iptables -t nat -A POSTROUTING -o wlan0 -j MASQUERADE
+sudo netfilter-persistent save
+
+
 echo "CLOBBERING THE DEFAULT DNSMASQ CONFIG"
 sudo tee /etc/dnsmasq.conf <<EOF
 interface=wlan1
   dhcp-range=192.168.99.100,192.168.99.199,255.255.255.0,24h
+  domain=wlan
+  address=/rt.wlan/10.0.0.1
 EOF
+
 
 echo "CONFIGURING HOSTAPD"
 sudo tee /etc/hostapd/hostapd.conf <<EOF
