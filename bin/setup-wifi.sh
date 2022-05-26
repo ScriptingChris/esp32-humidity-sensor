@@ -20,6 +20,9 @@ sudo dkms install -m rtl88x2bu -v ${VER}
 popd
 pwd
 
+echo "Please connect your wifi adapter to the pi before continuing."
+read ACTION
+
 
 # Configuring the new WLAN
 echo "SETTING STATIC IP ON WLAN1"
@@ -69,4 +72,12 @@ sudo sed -i 's|#DAEMON_CONF=""|DAEMON_CONF="/etc/hostapd/hostapd.conf"|' /etc/de
 sudo systemctl unmask hostapd
 sudo systemctl enable hostapd
 
-sudo reboot now
+echo "Do you want to reboot now? (y/n) - you will need to run the script: setup-docker.sh once reboot is complete."
+read ACTION
+
+if [[ $ACTION == "y" ]]
+then
+    sudo reboot now
+else
+    exit
+fi
