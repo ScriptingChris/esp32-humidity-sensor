@@ -20,8 +20,10 @@
       - iptables-persistent
 
   - name: Setting hostapd service
-    masked: no
-    enabled: yes
+    systemd:
+      name: hostapd
+      masked: no
+      enabled: yes
 
   - name: Rebooting the pi
     reboot:
@@ -51,6 +53,10 @@
     args:
       chdir: /home/pi/drivers/
     
+  - name: Creating the /etc/sysctl.d/routed-ap.conf
+    file:
+      path: /etc/sysctl.d/routed-ap.conf
+      state: touch
 
   - name: Configuring Wifi
     shell: |
@@ -91,3 +97,9 @@
       wpa_pairwise=TKIP
       rsn_pairwise=CCMP
       EOF
+
+  - name: Rebooting the pi
+    reboot:
+  
+  - name: Waiting for pi connection
+    wait_for_connection:
